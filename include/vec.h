@@ -11,7 +11,7 @@ typedef struct Vec {
 
 int vec_init(Vec* self, size_t capacity, size_t item_size);
 void vec_free(Vec* self);
-int vec_push(Vec* self, unsigned char byte);
-int vec_trim(Vec* self);
+void vec_push_byte(Vec* self, unsigned char byte);
+void vec_trim(Vec* self);
 
 #endif
