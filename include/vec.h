@@ -22,4 +22,6 @@ void vec_push_byte(Vec* self, unsigned char byte);
 void vec_trim(Vec* self);
 Slice vec_buf(Vec* self);
 
+void vec_debug_print(Vec* self);
+
 #endif

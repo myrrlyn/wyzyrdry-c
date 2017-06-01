@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -80,6 +81,14 @@ void vec_trim(Vec* self) {
  */
 Slice vec_buf(Vec* self) {
 	return slice_new(self->buf, self->len);
+}
+
+/**
+ * Print out the Vec for debugging purposes.
+ * @param self The Vec on which to act.
+ */
+void vec_debug_print(Vec* self) {
+	printf("Vec { buf: %p, len: %u, cap: %u }\n", self->buf, self->len, self->cap);
 }
 
 /**
