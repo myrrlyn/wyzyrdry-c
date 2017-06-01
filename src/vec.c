@@ -1,25 +1,32 @@
+#include <stdlib.h>
 #include <string.h>
+
+#include <slice.h>
 #include <vec.h>
 
 void vec_realloc(Vec* self);
 
 /**
  * Initialize a Vec structure.
- * @param self  The Vec on which to act.
  * @param capacity The starting capacity (in items) of the buffer.
  * @param item_size The size of items in the buffer.
- * @return -1 on allocation failure or 0 on success.
+ * @return A Vec structure. If malloc failed, buf will be NULL.
  */
-int vec_init(Vec* self, size_t capacity, size_t item_size) {
+Vec vec_init(size_t capacity, size_t item_size) {
+	Vec ret = {
+		.buf = NULL,
+		.len = 0,
+		.cap = 0,
+	};
 	size_t total = capacity * item_size;
 	void* buf = malloc(total);
 	if (buf == NULL) {
-		return -1;
+		return ret;
 	}
-	self->buf = (unsigned char*)buf;
-	self->len = 0;
-	self->cap = total;
-	return 0;
+	ret.buf = (unsigned char*)buf;
+	ret.len = 0;
+	ret.cap = total;
+	return ret;
 }
 
 /**
@@ -37,6 +44,9 @@ void vec_free(Vec* self) {
 
 /**
  * Push a byte into the Vec.
+ *
+ * If reallocation occurs and fails, the pushed byte will be silently dropped.
+ * A failed reallocation will cause the Vec to reset to empty state.
  * @param self The Vec on which to act.
  * @param byte The byte to push into the end of the Vec.
  */
@@ -44,8 +54,14 @@ void vec_push_byte(Vec* self, unsigned char byte) {
 	if (self->len == self->cap) {
 		vec_realloc(self);
 	}
-	self->buf[self->len] = byte;
-	++self->len;
+	if (self->buf != NULL) {
+		self->buf[self->len] = byte;
+		++self->len;
+	}
+	else {
+		self->len = 0;
+		self->cap = 0;
+	}
 }
 
 /**
@@ -55,6 +71,15 @@ void vec_push_byte(Vec* self, unsigned char byte) {
 void vec_trim(Vec* self) {
 	self->buf = realloc(self->buf, self->len);
 	self->cap = self->len;
+}
+
+/**
+ * Gets a reference to the interior contents of the Vec.
+ * @param self The Vec on which to act.
+ * @return A Slice (pointer and length) of the Vec's contents.
+ */
+Slice vec_buf(Vec* self) {
+	return slice_new(self->buf, self->len);
 }
 
 /**

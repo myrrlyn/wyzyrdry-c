@@ -4,5 +4,5 @@ project(wyzyrdry)
 set(CMAKE_C_STANDARD 99)
 
 include_directories(include/)
-set(SOURCE_FILES src/lib.c include/lib.h src/vec.c include/vec.h)
+set(SOURCE_FILES src/lib.c include/lib.h src/vec.c include/vec.h src/slice.c include/slice.h)
 add_library(wyzyrdry ${SOURCE_FILES})

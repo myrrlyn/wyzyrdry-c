@@ -3,9 +3,10 @@
  * module which is to be exported for client use.
  */
 
-#ifndef __WYZYRDRY_LIB_H
-#define __WYZYRDRY_LIB_H
+#ifndef WYZYRDRY_LIB_H
+#define WYZYRDRY_LIB_H
 
+#include "slice.h"
 #include "vec.h"
 
 #endif
