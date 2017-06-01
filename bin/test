@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cmake
+make
+gcc -o bin/wyz -Iinclude tests/*.c cmake-build-debug/libwyzyrdry.a
+bin/wyz
