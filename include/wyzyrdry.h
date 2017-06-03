@@ -9,4 +9,6 @@
 #include "slice.h"
 #include "vec.h"
 
+void hex_print(Slice item);
+
 #endif

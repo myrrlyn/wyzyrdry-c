@@ -66,6 +66,17 @@ void vec_push_byte(Vec* self, unsigned char byte) {
 }
 
 /**
+ * Append a Slice to the Vec.
+ * @param self The Vec on which to act.
+ * @param slice The Slice to be appended into the Vec.
+ */
+void vec_push_slice(Vec* self, const Slice slice) {
+	for (size_t idx = 0; idx < slice.len; ++idx) {
+		vec_push_byte(self, slice.ptr[idx]);
+	}
+}
+
+/**
  * Trims the Vec's capacity to exactly match its current length.
  * @param self The Vec on which to act.
  */
@@ -79,16 +90,23 @@ void vec_trim(Vec* self) {
  * @param self The Vec on which to act.
  * @return A Slice (pointer and length) of the Vec's contents.
  */
-Slice vec_buf(Vec* self) {
-	return slice_new(self->buf, self->len);
+Slice vec_as_slice(Vec self) {
+	return slice_new(self.buf, self.len);
 }
 
 /**
  * Print out the Vec for debugging purposes.
  * @param self The Vec on which to act.
  */
-void vec_debug_print(Vec* self) {
-	printf("Vec { buf: %p, len: %u, cap: %u }\n", self->buf, self->len, self->cap);
+void vec_debug_print(Vec self) {
+	printf("Vec { buf: %p, len: %zu, cap: %zu }\nBuf: ", self.buf, self.len, self.cap);
+	for (size_t idx = 0; idx < self.len; ++idx) {
+		printf("%02X ", self.buf[idx]);
+	}
+	for (size_t idx = self.len; idx < self.cap; ++idx) {
+		printf("__ ");
+	}
+	printf("\n");
 }
 
 /**

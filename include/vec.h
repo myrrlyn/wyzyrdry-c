@@ -19,9 +19,10 @@ typedef struct Vec {
 Vec vec_init(size_t capacity, size_t item_size);
 void vec_free(Vec* self);
 void vec_push_byte(Vec* self, unsigned char byte);
+void vec_push_slice(Vec* self, const Slice slice);
 void vec_trim(Vec* self);
-Slice vec_buf(Vec* self);
+Slice vec_as_slice(Vec self);
 
-void vec_debug_print(Vec* self);
+void vec_debug_print(Vec self);
 
 #endif
