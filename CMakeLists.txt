@@ -12,5 +12,7 @@ set(SOURCE_FILES
         include/vec.h
         src/slice.c
         include/slice.h
+        src/str.c
+        include/str.h
     )
 add_library(wyzyrdry ${SOURCE_FILES})

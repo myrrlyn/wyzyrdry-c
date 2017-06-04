@@ -7,6 +7,7 @@
 #define WYZYRDRY_LIB_H
 
 #include "slice.h"
+#include "str.h"
 #include "vec.h"
 
 void hex_print(Slice item);

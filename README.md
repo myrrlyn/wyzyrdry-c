@@ -45,3 +45,15 @@ idiom of passing pointers and lengths as siblings, but not coupled in the type
 system. Slices can be decomposed into their pointer and length components, but
 cannot be considered ABI equivalent to a pointer and length as siblings. Slices
 also support iterating over each byte in the buffer.
+
+## `Str`
+
+The `Str` module is a length-prefixed buffer that can be used to serialize
+variable-length items for transport through layers that may not know how to read
+the type in question.
+
+It uses a newtype wrapper over some unsigned integral type as its length and
+index type. By default, this type is set to the 16-bit `unsigned short`, but can
+be changed by modifying the `typedef unsigned <type> StrLen;` line in
+`include/str.h`. If modified, this library must be recompiled for every codebase
+that uses `Str` in the transport path.
