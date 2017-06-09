@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+void test_enum(void);
 void test_slice(void);
 void test_str(void);
 void test_vec(void);
@@ -11,4 +12,6 @@ int main(int argc, char* argv[]) {
 	test_slice();
 	printf("\nTesting Str!\n");
 	test_str();
+	printf("\nTesting Enum!\n");
+	test_enum();
 }

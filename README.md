@@ -16,7 +16,7 @@ so choose.
 # Design
 
 This library is a collection of *largely* self-contained modules, though items
-which I find useful will be used throughout the library.
+which I find useful will be used throughout the library.git log
 
 # Components
 
@@ -57,3 +57,77 @@ index type. By default, this type is set to the 16-bit `unsigned short`, but can
 be changed by modifying the `typedef unsigned <type> StrLen;` line in
 `include/str.h`. If modified, this library must be recompiled for every codebase
 that uses `Str` in the transport path.
+
+## `Enum`
+
+The `Enum` module is a header-only library that provides (somewhat) C-idiom
+tagged unions, after the Rustic fashion. This uses preprocessor macros to create
+new syntax, so there are some unpleasant restrictions.
+
+A tagged-union type is declared with:
+
+```c
+ENUM(UnionName, vartype, varname, ...);
+```
+
+where the `vartype, varname` pairs repeat for up to thirteen total variants.
+This is not a firm limit; it's just that C doesn't support recursive macros and
+I got bored manually unrolling the macros. If more than thirteen variants are
+needed, well, I'll expand that when I get there.
+
+This macro declares two items: `typedef enum UnionNameTag {} UnionNameTag;` and
+`typedef struct UnionName {} UnionName;` and populates them with the given
+variants. The enum is filled with variants named `UnionName_varname`, the struct
+has a union over all of the given `vartype` types, each named exactly `varname`
+without any mangling, and a `UnionNameTag` discriminant.
+
+Instances of the tagged-union are created with:
+
+```c
+UnionName inst = SET_VARIANT(UnionName, varname, body);
+```
+
+where `body` is an instance of the appropriate `vartype`. This can be a variable
+or a literal.
+
+The compiler can't typecheck these things, so keeping track of the discriminant
+is a must.
+
+The discriminant itself can be retrieved with:
+
+```c
+UnionNameTag disc = GET_VARIANT_TYPE(inst);
+```
+
+This has the unpleasant downside of leaking the name mangling strategy in use.
+The `ENUM_TAG(UnionName)` macro will get the type name of the discriminant enum
+for reducing information leaks.
+
+The body of a tagged-union can be extracted with:
+
+```c
+vartype body = GET_VARIANT_BODY(inst, disc);
+```
+
+The actual type of `vartype` must, obviously, be known to the using code, so I
+have not bothered creating a macro to extract the final type of the variant. I
+also don't know how I would accomplish that.
+
+### Example Usage
+
+```c
+//  Declare a Result enum that can be an Ok(void*) or an Err(char*)
+ENUM(Result, void*, Ok, char*, Err);
+Result r = SET_VARIANT(Result, Err, "Something went wrong");
+switch (GET_VARIANT_TYPE(r)) {
+case Result_Ok:
+	void* inner = GET_VARIANT_BODY(r);
+	break;
+case Result_Err:
+	char* msg = GET_VARIANT_BODY(r);
+	printf("ERR: %s\n", msg);
+	break;
+default:
+	//  This is unreachable.
+}
+```

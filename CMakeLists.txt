@@ -14,5 +14,6 @@ set(SOURCE_FILES
         include/slice.h
         src/str.c
         include/str.h
+        include/enum.h
     )
 add_library(wyzyrdry ${SOURCE_FILES})
