@@ -17,10 +17,10 @@ typedef struct Vec {
 } Vec;
 
 Vec vec_init(size_t capacity, size_t item_size);
-void vec_free(Vec* self);
-void vec_push_byte(Vec* self, unsigned char byte);
-void vec_push_slice(Vec* self, const Slice slice);
-void vec_trim(Vec* self);
+void vec_free(Vec* const self);
+void vec_push_byte(Vec* const self, unsigned char byte);
+void vec_push_slice(Vec* const self, const Slice slice);
+void vec_trim(Vec* const self);
 Slice vec_as_slice(Vec self);
 
 void vec_debug_print(Vec self);

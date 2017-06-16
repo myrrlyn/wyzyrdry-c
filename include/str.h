@@ -24,14 +24,18 @@ typedef struct Str {
 	unsigned char data[];
 } Str;
 
-Str* str_from_vec(Vec src);
-Str* str_from_vec_in_place(Slice dst, Vec src);
-Str* str_from_slice(Slice src);
-Str* str_from_slice_in_place(Slice dst, Slice src);
-void str_free(Str* self);
+Str* str_from_vec(const Vec src);
+Str* str_from_vec_in_place(const Slice dst, const Vec src);
+Str* str_from_slice(const Slice src);
+Str* str_from_slice_in_place(const Slice dst, const Slice src);
+void str_free(Str* const self);
 
-Slice str_as_slice(Str* self);
 
-void str_debug_print(Str* self);
+const Slice str_as_slice(Str* const self);
+
+void str_debug_print(const Str* const self);
+
+StrLen str_size(StrLen len);
+StrLen str_capacity(StrLen size);
 
 #endif

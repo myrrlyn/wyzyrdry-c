@@ -36,7 +36,7 @@ Vec vec_init(size_t capacity, size_t item_size) {
  * This frees the buffer and sets len and cap to 0.
  * @param self The Vec on which to act.
  */
-void vec_free(Vec* self) {
+void vec_free(Vec* const self) {
 	free(self->buf);
 	self->buf = NULL;
 	self->len = 0;
@@ -51,7 +51,7 @@ void vec_free(Vec* self) {
  * @param self The Vec on which to act.
  * @param byte The byte to push into the end of the Vec.
  */
-void vec_push_byte(Vec* self, unsigned char byte) {
+void vec_push_byte(Vec* const self, unsigned char byte) {
 	if (self->len == self->cap) {
 		vec_realloc(self);
 	}
@@ -70,7 +70,7 @@ void vec_push_byte(Vec* self, unsigned char byte) {
  * @param self The Vec on which to act.
  * @param slice The Slice to be appended into the Vec.
  */
-void vec_push_slice(Vec* self, const Slice slice) {
+void vec_push_slice(Vec* const self, const Slice slice) {
 	for (size_t idx = 0; idx < slice.len; ++idx) {
 		vec_push_byte(self, slice.ptr[idx]);
 	}
@@ -80,7 +80,7 @@ void vec_push_slice(Vec* self, const Slice slice) {
  * Trims the Vec's capacity to exactly match its current length.
  * @param self The Vec on which to act.
  */
-void vec_trim(Vec* self) {
+void vec_trim(Vec* const self) {
 	self->buf = realloc(self->buf, self->len);
 	self->cap = self->len;
 }

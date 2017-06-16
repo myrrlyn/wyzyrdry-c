@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include <slice.h>
+#include <wyzyrdry.h>
 
 /**
  * Make a new Slice out of a pointer and length.
@@ -12,7 +13,7 @@
  * @param len The length of memory captured by the slice.
  * @return A new Slice describing the memory.
  */
-Slice slice_new(unsigned char* ptr, size_t len) {
+const Slice slice_new(unsigned char* const ptr, size_t len) {
 	Slice ret = {
 		.ptr = ptr,
 		.len = len,
@@ -25,7 +26,7 @@ Slice slice_new(unsigned char* ptr, size_t len) {
  * @param self The Slice on which to act.
  * @return The Slice's pointer field.
  */
-unsigned char* slice_ptr(Slice self) {
+unsigned char* slice_ptr(const Slice self) {
 	return self.ptr;
 }
 
@@ -34,7 +35,7 @@ unsigned char* slice_ptr(Slice self) {
  * @param self The Slice on which to act.
  * @return The Slice's length field.
  */
-size_t slice_len(Slice self) {
+size_t slice_len(const Slice self) {
 	return self.len;
 }
 
@@ -43,7 +44,7 @@ size_t slice_len(Slice self) {
  * @param self The Slice over which to loop.
  * @param callback The function to be invoked with each byte in the Slice.
  */
-void slice_for_each(Slice self, void (*callback)(unsigned char c)) {
+void slice_for_each(const Slice self, void (*callback)(unsigned char c)) {
 	for (size_t idx = 0; idx < self.len; ++idx) {
 		callback(self.ptr[idx]);
 	}
@@ -53,10 +54,7 @@ void slice_for_each(Slice self, void (*callback)(unsigned char c)) {
  * Print out the Slice for debugging purposes.
  * @param self The Slice on which to act.
  */
-void slice_debug_print(Slice self) {
+void slice_debug_print(const Slice self) {
 	printf("Slice { ptr: %p, len: %zu }\nPtr: ", self.ptr, self.len);
-	for (size_t idx = 0; idx < self.len; ++idx) {
-		printf("%02X ", self.ptr[idx]);
-	}
-	printf("\n");
+	hex_print(self);
 }

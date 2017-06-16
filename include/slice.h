@@ -12,16 +12,16 @@
 #include <stdlib.h>
 
 typedef struct Slice {
-	unsigned char* ptr;
+	unsigned char* const ptr;
 	size_t len;
 } Slice;
 
-Slice slice_new(unsigned char* ptr, size_t len);
-unsigned char* slice_ptr(Slice self);
-size_t slice_len(Slice self);
+const Slice slice_new(unsigned char* const ptr, size_t len);
+unsigned char* slice_ptr(const Slice self);
+size_t slice_len(const Slice self);
 
-void slice_for_each(Slice self, void (*callback)(unsigned char c));
+void slice_for_each(const Slice self, void (*callback)(unsigned char c));
 
-void slice_debug_print(Slice self);
+void slice_debug_print(const Slice self);
 
 #endif

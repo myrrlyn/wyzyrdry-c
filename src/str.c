@@ -5,19 +5,17 @@
 #include <wyzyrdry.h>
 
 Str* str_new(StrLen len);
-StrLen str_size(StrLen len);
-StrLen str_capacity(StrLen size);
 
 /**
  * Copy a Vec into a newly allocated Str buffer.
  * @param src The Vec whose contents will be written into the new Str.
  * @return A pointer to the newly allocated Str buffer.
  */
-Str* str_from_vec(Vec src) {
-	Str* ret = str_new(src.len);
+Str* str_from_vec(const Vec src) {
+	Str* ret = str_new((StrLen)src.len);
 	if (ret != NULL) {
 		memmove(&ret->data, src.buf, src.len);
-		ret->len = src.len;
+		ret->len = (StrLen)src.len;
 	}
 	return ret;
 }
@@ -36,7 +34,7 @@ Str* str_from_vec(Vec src) {
  * @return A pointer to the Str resulting from this operation. This pointer is
  * identical to dst.ptr
  */
-Str* str_from_vec_in_place(Slice dst, Vec src) {
+Str* str_from_vec_in_place(const Slice dst, const Vec src) {
 	/*
 	 * Check if the destination can receive the source as a Str. If not, exit.
 	 */
@@ -55,11 +53,11 @@ Str* str_from_vec_in_place(Slice dst, Vec src) {
  * @param src The Slice whose contents will be written into the new Str.
  * @return A pointer to the newly allocated Str buffer.
  */
-Str* str_from_slice(Slice src) {
+Str* str_from_slice(const Slice src) {
 	Str* ret = str_new(src.len);
 	if (ret != NULL) {
 		memmove(&ret->data, src.ptr, src.len);
-		ret->len = src.len;
+		ret->len = (StrLen)src.len;
 	}
 	return ret;
 }
@@ -75,16 +73,16 @@ Str* str_from_slice(Slice src) {
  * destination.
  * @return A pointer to the destination Slice's buffer, which now holds a Str.
  */
-Str* str_from_slice_in_place(Slice dst, Slice src) {
+Str* str_from_slice_in_place(const Slice dst, const Slice src) {
 	/*
 	 * Check if the destination can receive the source as a Str. If not, exit.
 	 */
-	if (dst.len < str_size(src.len)) {
+	if (dst.len < str_size((StrLen)src.len)) {
 		return NULL;
 	}
 
 	Str* ret = (void*)dst.ptr;
-	ret->len = src.len;
+	ret->len = (StrLen)src.len;
 	memmove(&ret->data, src.ptr, src.len);
 	return ret;
 }
@@ -104,12 +102,11 @@ void str_free(Str* self) {
  * @param self The Str to be described as a Slice.
  * @return A Slice describing the Str.
  */
-Slice str_as_slice(Str* self) {
-	Slice ret = {
+const Slice str_as_slice(Str* const self) {
+	return (Slice){
 		.ptr = self->data,
 		.len = self->len,
 	};
-	return ret;
 }
 
 /**
@@ -118,14 +115,11 @@ Slice str_as_slice(Str* self) {
  * contents (length prefix and data)
  * @param self
  */
-void str_debug_print(Str* self) {
+void str_debug_print(const Str* const self) {
 	printf("Str { len: %zu, data ... }\nData: ", (size_t)self->len);
-	hex_print(str_as_slice(self));
+	hex_print(str_as_slice((Str* const)self));
 	printf("RawStr: ");
-	for (StrLen idx = 0; idx < str_size(self->len); ++idx) {
-		printf("%02X ", ((unsigned char*)self)[idx]);
-	}
-	printf("\n");
+	hex_print(slice_new((unsigned char*)self, str_size(self->len)));
 }
 
 /**
@@ -138,7 +132,7 @@ Str* str_new(StrLen len) {
 }
 
 /**
- * Get the size of a Str that wraps a certain amount of data.
+ * INTERNAL USE: Get the size of a Str that wraps a certain amount of data.
  * @param len The amount of data to wrap with a Str.
  * @return The size of the Str that will wrap the given data.
  */
@@ -147,7 +141,7 @@ StrLen str_size(StrLen len) {
 }
 
 /**
- * Get the data capacity of a Str.
+ * INTERNAL USE: Get the data capacity of a Str.
  * @param size The length of a data buffer.
  * @return The amount of data that buffer can hold formatted as a Str.
  */

@@ -6,6 +6,7 @@
 #ifndef WYZYRDRY_LIB_H
 #define WYZYRDRY_LIB_H
 
+#include "enum.h"
 #include "slice.h"
 #include "str.h"
 #include "vec.h"

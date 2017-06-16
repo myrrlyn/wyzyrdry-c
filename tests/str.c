@@ -37,7 +37,8 @@ void test_str(void) {
 	Vec vec_in_place = vec_init(32, 1);
 	printf("\nExpectation: A new Vec with capacity 32 exists.\n");
 	vec_debug_print(vec_in_place);
-	vec_push_slice(&vec_in_place, slice_new((unsigned char*)"                                ", 32));
+	Slice empty = slice_new((unsigned char*)"                                ", 32);
+	vec_push_slice(&vec_in_place, empty);
 	/*
 	 * The Vec is now described as a Slice. A Slice cannot own memory; it can
 	 * only describe other regions. As such, Slice has no alloc or free methods,
