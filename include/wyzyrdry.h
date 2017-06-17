@@ -6,11 +6,11 @@
 #ifndef WYZYRDRY_LIB_H
 #define WYZYRDRY_LIB_H
 
-#include "enum.h"
-#include "ringbuf.h"
-#include "slice.h"
-#include "str.h"
-#include "vec.h"
+#include "wyzyrdry/enum.h"
+#include "wyzyrdry/ringbuf.h"
+#include "wyzyrdry/slice.h"
+#include "wyzyrdry/str.h"
+#include "wyzyrdry/vec.h"
 
 void hex_print(Slice item);
 

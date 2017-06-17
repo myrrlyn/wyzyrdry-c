@@ -14,8 +14,8 @@
 #ifndef WYZYRDRY_STR_H
 #define WYZYRDRY_STR_H
 
-#include <slice.h>
-#include <vec.h>
+#include "slice.h"
+#include "vec.h"
 
 /**
  * Newtype for the length and index of a Str.

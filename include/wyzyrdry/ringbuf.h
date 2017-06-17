@@ -1,5 +1,5 @@
-#ifndef WYZYRDRY_MQRB_H
-#define WYZYRDRY_MQRB_H
+#ifndef WYZYRDRY_RINGBUF_H
+#define WYZYRDRY_RINGBUF_H
 
 #include <stdlib.h>
 
@@ -42,10 +42,10 @@ size_t ringbuf_space_free(const RingBuf* const self);
 size_t ringbuf_space_used(const RingBuf* const self);
 StrLen ringbuf_peek_len(const RingBuf* const self);
 
+StrLen ringbuf_read(RingBuf* const self, const Slice out);
 StrLen ringbuf_write_slice(RingBuf* const self, const Slice in);
 StrLen ringbuf_write_str(RingBuf* const self, const Str* const in);
 StrLen ringbuf_write_vec(RingBuf* const self, const Vec* const in);
-StrLen ringbuf_read(RingBuf* const self, const Slice out);
 
 void ringbuf_pop(RingBuf* const self);
 

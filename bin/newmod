@@ -1,5 +1,5 @@
 #!/bin/sh
 
-touch include/$1.h
+touch include/wyzyrdry/$1.h
 touch src/$1.c
 touch tests/$1.c

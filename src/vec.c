@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <slice.h>
-#include <vec.h>
+#include <wyzyrdry.h>
 
 void vec_realloc(Vec* self);
 
