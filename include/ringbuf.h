@@ -38,17 +38,17 @@ RingBuf ringbuf_init(const Slice store);
 void ringbuf_free(RingBuf* const self);
 void ringbuf_wipe(RingBuf* const self);
 
-size_t ringbuf_space_free(const RingBuf self);
-size_t ringbuf_space_used(const RingBuf self);
-StrLen ringbuf_peek_len(RingBuf self);
+size_t ringbuf_space_free(const RingBuf* const self);
+size_t ringbuf_space_used(const RingBuf* const self);
+StrLen ringbuf_peek_len(const RingBuf* const self);
 
 StrLen ringbuf_write_slice(RingBuf* const self, const Slice in);
 StrLen ringbuf_write_str(RingBuf* const self, const Str* const in);
-StrLen ringbuf_write_vec(RingBuf* const self, const Vec in);
+StrLen ringbuf_write_vec(RingBuf* const self, const Vec* const in);
 StrLen ringbuf_read(RingBuf* const self, const Slice out);
 
 void ringbuf_pop(RingBuf* const self);
 
-void ringbuf_debug_print(RingBuf self);
+void ringbuf_debug_print(const RingBuf* const self);
 
 #endif

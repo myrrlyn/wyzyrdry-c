@@ -16,7 +16,7 @@ typedef struct Slice {
 	size_t len;
 } Slice;
 
-const Slice slice_new(unsigned char* const ptr, size_t len);
+const Slice slice_new(unsigned char* ptr, size_t len);
 unsigned char* slice_ptr(const Slice self);
 size_t slice_len(const Slice self);
 

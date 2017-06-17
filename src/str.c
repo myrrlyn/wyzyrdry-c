@@ -11,11 +11,11 @@ Str* str_new(StrLen len);
  * @param src The Vec whose contents will be written into the new Str.
  * @return A pointer to the newly allocated Str buffer.
  */
-Str* str_from_vec(const Vec src) {
-	Str* ret = str_new((StrLen)src.len);
+Str* str_from_vec(const Vec* const src) {
+	Str* ret = str_new((StrLen)src->len);
 	if (ret != NULL) {
-		memmove(&ret->data, src.buf, src.len);
-		ret->len = (StrLen)src.len;
+		memmove(&ret->data, src->buf, src->len);
+		ret->len = (StrLen)src->len;
 	}
 	return ret;
 }
@@ -34,17 +34,17 @@ Str* str_from_vec(const Vec src) {
  * @return A pointer to the Str resulting from this operation. This pointer is
  * identical to dst.ptr
  */
-Str* str_from_vec_in_place(const Slice dst, const Vec src) {
+Str* str_from_vec_in_place(const Slice dst, const Vec* const src) {
 	/*
 	 * Check if the destination can receive the source as a Str. If not, exit.
 	 */
-	if (dst.len < str_size(src.len)) {
+	if (dst.len < str_size((StrLen)src->len)) {
 		return NULL;
 	}
 
 	Str* ret = (void*)dst.ptr;
-	ret->len = src.len;
-	memmove(&ret->data, src.buf, src.len);
+	ret->len = (StrLen)src->len;
+	memmove(&ret->data, src->buf, src->len);
 	return ret;
 }
 

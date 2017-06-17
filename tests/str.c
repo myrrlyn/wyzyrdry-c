@@ -11,7 +11,7 @@ void test_str(void) {
 	Slice greet = slice_new((unsigned char*)"Saluton, mondo!\n", 16);
 	vec_push_slice(&vec, greet);
 
-	Str* vec1 = str_from_vec(vec);
+	Str* vec1 = str_from_vec(&vec);
 	printf("\nExpectation: A new Str is formed, which has the same length as the Vec.\n");
 	printf("Str address: %p, Vec buffer address: %p.\n", vec1, vec.buf);
 	printf("Str len: %zu, Vec len: %zu.\n", (size_t)vec1->len, vec.len);
@@ -19,7 +19,7 @@ void test_str(void) {
 	printf("\nExpectation: Str has the same data contents as the Vec.\n");
 	str_debug_print(vec1);
 	printf("----\n");
-	vec_debug_print(vec);
+	vec_debug_print(&vec);
 
 	Str* slice1 = str_from_slice(greet);
 	printf("\nExpectation: A new Str is formed, with the same length and content as the Slice.\n");
@@ -36,7 +36,7 @@ void test_str(void) {
 	 */
 	Vec vec_in_place = vec_init(32, 1);
 	printf("\nExpectation: A new Vec with capacity 32 exists.\n");
-	vec_debug_print(vec_in_place);
+	vec_debug_print(&vec_in_place);
 	Slice empty = slice_new((unsigned char*)"                                ", 32);
 	vec_push_slice(&vec_in_place, empty);
 	/*
@@ -45,7 +45,7 @@ void test_str(void) {
 	 * and is not considered to OWN the heap memory in question, merely borrow
 	 * it.
 	 */
-	Slice vip_slice = vec_as_slice(vec_in_place);
+	Slice vip_slice = vec_as_slice(&vec_in_place);
 	printf("Expectation: A Slice describing that Vec exists.\n");
 	slice_debug_print(vip_slice);
 	/*

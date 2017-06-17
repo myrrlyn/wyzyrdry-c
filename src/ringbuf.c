@@ -48,7 +48,7 @@ StrLen ringbuf_push_raw(
 	StrLen len,
 	const unsigned char* const src
 );
-RbAct ringbuf_check(RingBuf self, RbOp op);
+RbAct ringbuf_check(const RingBuf* const self, RbOp op);
 
 /**
  * Initialize a `RingBuf` over the given `Slice` of memory.
@@ -91,8 +91,8 @@ void ringbuf_wipe(RingBuf* const self) {
  * @param self The `RingBuf` to inspect.
  * @return A count of available bytes.
  */
-size_t ringbuf_space_free(RingBuf self) {
-	return self.store.len - ringbuf_space_used(self);
+size_t ringbuf_space_free(const RingBuf* const self) {
+	return self->store.len - ringbuf_space_used(self);
 }
 
 /**
@@ -100,15 +100,15 @@ size_t ringbuf_space_free(RingBuf self) {
  * @param self The `RingBuf` to inspect.
  * @return A count of unavailable bytes.
  */
-size_t ringbuf_space_used(RingBuf self) {
-	if (self.count == 0) {
+size_t ringbuf_space_used(const RingBuf* const self) {
+	if (self->count == 0) {
 		return 0;
 	}
-	if (self.head < self.tail) {
-		return self.tail - self.head;
+	if (self->head < self->tail) {
+		return self->tail - self->head;
 	}
 	else {
-		return self.store.len - self.head + self.tail;
+		return self->store.len - self->head + self->tail;
 	}
 }
 
@@ -117,8 +117,8 @@ size_t ringbuf_space_used(RingBuf self) {
  * @param self The `RingBuf` on which to act.
  * @return The length of the first `Str` in the queue, or zero if empty.
  */
-StrLen ringbuf_peek_len(RingBuf self) {
-	if (self.count == 0) {
+StrLen ringbuf_peek_len(const RingBuf* const self) {
+	if (self->count == 0) {
 		return 0;
 	}
 	else {
@@ -130,18 +130,18 @@ StrLen ringbuf_peek_len(RingBuf self) {
 				return 0;
 			}
 			case ENUM_VAR(RbAct, NoWrap): {
-				/* Treat self.head as indexing to a StrLen, deref, and return */
-				return *(StrLen*)&self.store.ptr[self.head];
+				/* Treat self->head as indexing to a StrLen, deref, and return */
+				return *(StrLen*)&self->store.ptr[self->head];
 			}
 			case ENUM_VAR(RbAct, Wrap): {
 				/* Collect the wrap information about the prefix. */
 				RbWrap w = GET_VARIANT_BODY(rbt, Wrap);
 				/* Prep to receive a StrLen */
 				unsigned char tmp[sizeof(StrLen)];
-				/* Move `front` bytes from self.head into tmp */
-				memmove(tmp, &self.store.ptr[self.head], w.front);
+				/* Move `front` bytes from self->head into tmp */
+				memmove(tmp, &self->store.ptr[self->head], w.front);
 				/* Move `back` bytes from self[0] into tmp[front] */
-				memmove(&tmp[w.front], self.store.ptr, w.back);
+				memmove(&tmp[w.front], self->store.ptr, w.back);
 				/* tmp is now the bytes of a StrLen; cast, deref, and return. */
 				return *(StrLen*)tmp;
 			}
@@ -167,8 +167,8 @@ StrLen ringbuf_write_str(RingBuf* const self, const Str* const in) {
  * @param in The `Vec` to be pushed.
  * @return The amount of data pushed into the queue.
  */
-StrLen ringbuf_write_vec(RingBuf* const self, const Vec in) {
-	return ringbuf_push_raw(self, (StrLen)in.len, in.buf);
+StrLen ringbuf_write_vec(RingBuf* const self, const Vec* const in) {
+	return ringbuf_push_raw(self, (StrLen)in->len, in->buf);
 }
 
 /**
@@ -193,13 +193,13 @@ StrLen ringbuf_write_slice(RingBuf* const self, const Slice in) {
  * @return The number of bytes moved.
  */
 StrLen ringbuf_read(RingBuf* const self, const Slice out) {
-	StrLen msglen = ringbuf_peek_len(*self);
+	StrLen msglen = ringbuf_peek_len(self);
 	/* Abort if there is no message, or the message is too large to fit. */
 	if (msglen == 0 || msglen > out.len) {
 		return 0;
 	}
 	/* Check what behavior is required to extract the message */
-	RbAct rba = ringbuf_check(*self, SET_VARIANT(RbOp, Read, msglen));
+	RbAct rba = ringbuf_check(self, SET_VARIANT(RbOp, Read, msglen));
 	switch (GET_VARIANT_TYPE(rba)) {
 		case ENUM_VAR(RbAct, NoWrap): {
 			Str* msg = (Str*)&self->store.ptr[self->head];
@@ -247,11 +247,11 @@ StrLen ringbuf_read(RingBuf* const self, const Slice out) {
  * @param self
  */
 void ringbuf_pop(RingBuf* const self) {
-	StrLen msglen = ringbuf_peek_len(*self);
+	StrLen msglen = ringbuf_peek_len(self);
 	if (msglen == 0) {
 		return;
 	}
-	RbAct rba = ringbuf_check(*self, SET_VARIANT(RbOp, Read, msglen));
+	RbAct rba = ringbuf_check(self, SET_VARIANT(RbOp, Read, msglen));
 	switch (GET_VARIANT_TYPE(rba)) {
 		/* The first stored message does not wrap; bump head */
 		case ENUM_VAR(RbAct, NoWrap): {
@@ -283,18 +283,18 @@ void ringbuf_pop(RingBuf* const self) {
  * Display the `RingBuf` for debugging purposes.
  * @param self
  */
-void ringbuf_debug_print(RingBuf self) {
+void ringbuf_debug_print(const RingBuf* const self) {
 	printf(
 		"RingBuf { store: { ptr: %p, cap: %zu }, head: %zu, tail: %zu, count: %zu }\n",
-		(void*)self.store.ptr,
-		self.store.len,
-		(size_t)self.head,
-		(size_t)self.tail,
-		(size_t)self.count
+		(void*)self->store.ptr,
+		self->store.len,
+		(size_t)self->head,
+		(size_t)self->tail,
+		(size_t)self->count
 	);
-	if (self.store.ptr != NULL) {
+	if (self->store.ptr != NULL) {
 		printf("Contents: ");
-		hex_print(slice_new(self.store.ptr, 32));
+		hex_print(slice_new(self->store.ptr, 32));
 	}
 }
 
@@ -328,7 +328,7 @@ StrLen ringbuf_push_raw(
 	/* Get the total size of the data to be pushed into the queue's store */
 	StrLen strlen = str_size(len);
 	/* Check if the queue can receive that much data */
-	RbAct rba = ringbuf_check(*self, SET_VARIANT(RbOp, Write, len));
+	RbAct rba = ringbuf_check(self, SET_VARIANT(RbOp, Write, len));
 	switch (GET_VARIANT_TYPE(rba)) {
 		/* It can't */
 		case ENUM_VAR(RbAct, NoOp): {
@@ -400,7 +400,7 @@ StrLen ringbuf_push_raw(
  * interior value does not include the Str header.
  * @return An `RbAct` variant describing the operation.
  */
-RbAct ringbuf_check(RingBuf self, RbOp op) {
+RbAct ringbuf_check(const RingBuf* const self, RbOp op) {
 	/* RBO variants are the same type, so just extract the body */
 	StrLen msglen = GET_VARIANT_BODY(op, Read);
 	/* Add the Str heading */
@@ -408,11 +408,11 @@ RbAct ringbuf_check(RingBuf self, RbOp op) {
 	switch (GET_VARIANT_TYPE(op)) {
 		case ENUM_VAR(RbOp, Read): {
 			/* Early failure if empty queues can't support a read operation. */
-			if (self.count == 0) {
+			if (self->count == 0) {
 				return SET_VARIANT(RbAct, NoOp, "The queue is empty");
 			}
 			/* Get the number of bytes between head and end-of-store */
-			StrLen back = (StrLen)(self.store.len - self.head);
+			StrLen back = (StrLen)(self->store.len - self->head);
 			/* If there are at least as many store bytes as transfer, NoWrap. */
 			if (back >= strlen) {
 				return SET_VARIANT(RbAct, NoWrap, strlen);
@@ -435,7 +435,7 @@ RbAct ringbuf_check(RingBuf self, RbOp op) {
 				return SET_VARIANT(RbAct, NoOp, "Message too large!");
 			}
 			/* Same logic as above, but for tail instead of head */
-			StrLen back = (StrLen)(self.store.len - self.tail);
+			StrLen back = (StrLen)(self->store.len - self->tail);
 			if (back >= strlen) {
 				return SET_VARIANT(RbAct, NoWrap, strlen);
 			}

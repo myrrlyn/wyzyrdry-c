@@ -21,8 +21,8 @@ void vec_free(Vec* const self);
 void vec_push_byte(Vec* const self, unsigned char byte);
 void vec_push_slice(Vec* const self, const Slice slice);
 void vec_trim(Vec* const self);
-Slice vec_as_slice(Vec self);
+Slice vec_as_slice(const Vec* const self);
 
-void vec_debug_print(Vec self);
+void vec_debug_print(const Vec* const self);
 
 #endif

@@ -90,20 +90,20 @@ void vec_trim(Vec* const self) {
  * @param self The Vec on which to act.
  * @return A Slice (pointer and length) of the Vec's contents.
  */
-Slice vec_as_slice(Vec self) {
-	return slice_new(self.buf, self.len);
+Slice vec_as_slice(const Vec* const self) {
+	return slice_new(self->buf, self->len);
 }
 
 /**
  * Print out the Vec for debugging purposes.
  * @param self The Vec on which to act.
  */
-void vec_debug_print(Vec self) {
-	printf("Vec { buf: %p, len: %zu, cap: %zu }\nBuf: ", self.buf, self.len, self.cap);
-	for (size_t idx = 0; idx < self.len; ++idx) {
-		printf("%02X ", self.buf[idx]);
+void vec_debug_print(const Vec* const self) {
+	printf("Vec { buf: %p, len: %zu, cap: %zu }\nBuf: ", self->buf, self->len, self->cap);
+	for (size_t idx = 0; idx < self->len; ++idx) {
+		printf("%02X ", self->buf[idx]);
 	}
-	for (size_t idx = self.len; idx < self.cap; ++idx) {
+	for (size_t idx = self->len; idx < self->cap; ++idx) {
 		printf("__ ");
 	}
 	printf("\n");
