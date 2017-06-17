@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 typedef struct Slice {
-	unsigned char* const ptr;
+	unsigned char* ptr;
 	size_t len;
 } Slice;
 

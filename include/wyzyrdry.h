@@ -7,6 +7,7 @@
 #define WYZYRDRY_LIB_H
 
 #include "enum.h"
+#include "ringbuf.h"
 #include "slice.h"
 #include "str.h"
 #include "vec.h"

@@ -15,5 +15,7 @@ set(SOURCE_FILES
         src/str.c
         include/str.h
         include/enum.h
+        src/ringbuf.c
+        include/ringbuf.h
     )
 add_library(wyzyrdry ${SOURCE_FILES})

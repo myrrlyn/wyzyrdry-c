@@ -131,3 +131,20 @@ default:
 	//  This is unreachable.
 }
 ```
+
+## `RingBuf`
+
+The `RingBuf` module provides a method of building circular buffers that hold
+`Str` elements. The `RingBuf` is similar to the `Vec` in that it is a small
+struct governing a discrete buffer of memory, which can be statically or
+dynamically allocated.
+
+`RingBuf` stores are guaranteed to provide `O(n)` access for push and pop
+functions, where `n` is the size of the `Str` being moved, and to be correct
+even when wrapping from the back of the store to the front.
+
+As the buffer uses `Str` as its atom of storage, it will refuse to store data
+that is larger than its remaining space available.
+
+Methods are provided for receiving `Slice`, `Str`, and `Vec` objects. Storage of
+other types should be done by creating a `Slice` descriptor and passing that in.
