@@ -2,5 +2,5 @@
 
 cmake .
 make
-gcc -o bin/wyz -Iinclude tests/*.c cmake-build-debug/libwyzyrdry.a
+clang -o bin/wyz -Iinclude tests/*.c cmake-build-debug/libwyzyrdry.a || exit
 bin/wyz
