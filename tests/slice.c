@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
 #include <wyzyrdry.h>
 
 char greet[] = "Saluton, mondo!\n";

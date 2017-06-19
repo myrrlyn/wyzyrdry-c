@@ -5,6 +5,8 @@ set(CMAKE_C_STANDARD 99)
 
 include_directories(include/)
 set(LIBRARY_OUTPUT_PATH cmake-build-debug)
+set(EXECUTABLE_OUTPUT_PATH cmake-build-debug)
+
 set(SOURCE_FILES
 		src/wyzyrdry.c
 		include/wyzyrdry.h
@@ -19,3 +21,13 @@ set(SOURCE_FILES
 		include/wyzyrdry/ringbuf.h
 	)
 add_library(wyzyrdry ${SOURCE_FILES})
+
+set(TEST_FILES
+		tests/main.c
+		tests/vec.c
+		tests/slice.c
+		tests/str.c
+		tests/enum.c
+		tests/ringbuf.c
+	)
+add_executable(wyz ${TEST_FILES} ${SOURCE_FILES})

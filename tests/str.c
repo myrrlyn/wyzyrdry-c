@@ -1,9 +1,4 @@
-/**
- * Tests for the Str module
- */
-
 #include <stdio.h>
-#include <string.h>
 #include <wyzyrdry.h>
 
 void test_str(void) {

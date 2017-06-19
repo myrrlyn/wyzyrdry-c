@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-#include <enum.h>
+#include <wyzyrdry.h>
 
 typedef struct EnumTestObj {
 	int a;
